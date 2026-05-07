@@ -1,57 +1,185 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="it">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.5">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TPS BANK</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000000;
+            --card-color: #1e2748; /* Il tuo nuovo colore */
+            --accent: #00f2ff;
+            --text-dim: #666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* BRAND & LOGO SECTION */
+        .brand-header {
+            padding: 40px 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tps-logo-box {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--accent), #0066ff);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.3);
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            color: white;
+        }
+
+        /* SALDO */
+        .balance-section {
+            padding: 20px;
+            text-align: center;
+        }
+        .label { color: var(--text-dim); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        .balance { font-size: 46px; font-weight: 700; margin-top: 5px; }
+
+        /* CONTENT AREA */
+        .main { flex: 1; padding: 0 25px; display: flex; flex-direction: column; align-items: center; }
+
+        /* TESSERA CON COLORE #1e2748 */
+        .card {
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 1.58 / 1;
+            background-color: var(--card-color);
+            /* Sfumatura leggera per dare profondità al blu */
+            background-image: radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
+
+        .card-chip {
+            width: 45px;
+            height: 32px;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            border-radius: 5px;
+        }
+
+        .card-number { font-size: 18px; letter-spacing: 3px; color: #fff; font-family: monospace; z-index: 2; }
+        
+        .card-bottom { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; }
+        .card-name-txt { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+
+        /* TASTI AZIONE */
+        .actions { display: flex; gap: 50px; margin-top: 50px; }
+        .btn-container { text-align: center; cursor: pointer; color: inherit; }
+        
+        .btn-disabled { opacity: 0.3; cursor: default; }
+
+        .circle-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #080808;
+            border: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+
+        .accent-color { color: var(--accent); border-color: rgba(0, 242, 255, 0.2); }
+        .btn-container:active:not(.btn-disabled) .circle-icon { transform: scale(0.9); background: #111; }
+
+        /* BOTTOM NAV */
+        .nav-bar {
+            margin-top: auto;
+            background: #000;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0 35px;
+            border-top: 1px solid #111;
+        }
+        .nav-link { color: #333; text-decoration: none; font-size: 22px; }
+        .active-link { color: var(--accent); }
+
+    </style>
 </head>
 <body>
-<p class="p1">&lt;div class="app-container"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="top-bar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="menu"&gt;☰&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="title"&gt;LEO BANK&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="profile"&gt;👤&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="balance"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;Saldo totale&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;€ 0.00&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;span&gt;Mostra saldo&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card-top"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="chip"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="logo"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card-number"&gt;4536 4777 7110 1055&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card-bottom"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="name"&gt;LEONARDO SORU&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="valid"&gt;06/50&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="actions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="btn"&gt;+&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="btn minus"&gt;−&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;Invia&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;Richiedi&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;Carte&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;Movimenti&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/div&gt;</p>
+
+    <div class="brand-header">
+        <div class="tps-logo-box">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="brand-name">TPS BANK</div>
+    </div>
+
+    <div class="balance-section">
+        <p class="label">Total Balance</p>
+        <h1 class="balance">€ 0,00</h1>
+    </div>
+
+    <main class="main">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="card-chip"></div>
+                <i class="fa-solid fa-wifi" style="transform: rotate(90deg); color: rgba(255,255,255,0.2);"></i>
+            </div>
+
+            <div class="card-number">•••• •••• •••• 1003</div>
+
+            <div class="card-bottom">
+                <p class="card-name-txt">LEONARDO SORU</p>
+                <p style="font-size: 11px; font-weight: bold; color: white;">06/50</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="btn-container" onclick="location.reload()">
+                <div class="circle-icon accent-color"><i class="fa-solid fa-arrows-rotate"></i></div>
+                <p class="label" style="font-size: 11px;">Boost</p>
+            </div>
+
+            <div class="btn-container btn-disabled">
+                <div class="circle-icon"><i class="fa-solid fa-paper-plane"></i></div>
+                <p class="label" style="font-size: 11px;">Send</p>
+            </div>
+        </div>
+    </main>
+
+    <nav class="nav-bar">
+        <a href="#" class="nav-link active-link"><i class="fa-solid fa-house"></i></a>
+        <a href="#" class="nav-link"><i class="fa-solid fa-chart-simple"></i></a>
+        <a href="#" class="nav-link"><i class="fa-solid fa-user"></i></a>
+    </nav>
+
 </body>
 </html>
