@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TPS BANK</title>
+    <title>DELTA BANK</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="DELTA BANK">
     <style>
         :root {
             --bg: #000000;
@@ -25,121 +31,164 @@
             overflow: hidden;
         }
 
-        /* LOGO SOPRA IL SALDO */
+        /* HEADER */
         .brand-header {
             padding: 40px 20px 10px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
-        .custom-logo {
-            max-width: 180px;
-            height: auto;
-            max-height: 80px;
-            object-fit: contain;
-        }
+        .custom-logo { max-width: 180px; height: auto; max-height: 80px; object-fit: contain; }
 
         /* SALDO */
-        .balance-section {
-            padding: 20px;
-            text-align: center;
-        }
+        .balance-section { padding: 20px; text-align: center; }
         .label { color: var(--text-dim); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
         .balance { font-size: 46px; font-weight: 700; margin-top: 5px; }
 
         .main { flex: 1; padding: 0 25px; display: flex; flex-direction: column; align-items: center; }
 
-        /* LA CARTA */
-        .card {
+        /* --- LOGICA CARTA 3D AGGIORNATA --- */
+        .card-container {
             width: 100%;
             max-width: 340px;
             aspect-ratio: 1.58 / 1;
-            background-color: var(--card-color);
-            background-image: radial-gradient(circle at top left, rgba(255,255,255,0.1), transparent);
+            perspective: 1200px; /* Cruciale per l'effetto 3D */
+            z-index: 10;
+        }
+
+        .card-flipper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-flipper.is-flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            width: 100%;
+            height: 100%;
             border-radius: 20px;
-            position: relative; /* Fondamentale per i posizionamenti interni */
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            overflow: hidden;
+            
+            /* NASCONDE IL RETRO DEL LIVELLO */
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            
+            /* Aggiunta: Transizione pulita per l'opacità durante il flip */
+            transition: opacity 0.3s ease;
         }
 
-        /* LOGO FILIGRANA AL CENTRO */
+        /* --- FRONTE --- */
+        .card-front {
+            background-color: var(--card-color);
+            background-image: radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent);
+            z-index: 2; /* Inizialmente sopra */
+            opacity: 1;
+        }
+        
+        /* Quando la carta è flippata, il fronte scompare */
+        .card-flipper.is-flipped .card-front {
+            opacity: 0;
+            pointer-events: none; /* Impedisce di cliccarci sopra mentre è girata */
+        }
+
         .card-center-logo {
-            position: absolute;
-            top: 47%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 130px;
-            opacity: 0.15;
-            z-index: 1;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 130px; opacity: 0.15; z-index: 1; pointer-events: none;
         }
 
-        /* CHIP - IN ALTO A SINISTRA */
         .card-chip {
-            position: absolute;
-            top: 80px;
-            left: 25px;
-            width: 48px;
-            height: 35px;
+            position: absolute; top: 80px; left: 25px;
+            width: 48px; height: 35px;
             background: linear-gradient(135deg, #fceabb 0%, #fccd4d 50%, #f8b500 51%, #fbdf93 100%);
-            border-radius: 6px;
-            z-index: 2;
+            border-radius: 6px; z-index: 2;
         }
 
-        /* MASTERCARD - FORZATO IN ALTO A DESTRA */
         .mastercard-icon {
-            position: absolute;
-            top: 25px;    /* Stessa altezza del chip per simmetria */
-            right: 25px;  /* Bloccato a destra */
-            font-size: 45px;
-            color: rgba(255, 255, 255, 0.8);
-            z-index: 2;
+            position: absolute; top: 25px; right: 25px;
+            font-size: 45px; color: rgba(255, 255, 255, 0.8); z-index: 2;
         }
 
-        /* NUMERO CARTA - CENTRATO VERTICALMENTE */
         .card-number { 
-            position: absolute;
-            top: 65%;
-            left: 25px;
-            font-size: 20px; 
-            letter-spacing: 3px; 
-            color: #fff; 
-            font-family: 'Courier New', monospace;
-            z-index: 2;
+            position: absolute; top: 65%; left: 25px;
+            font-size: 20px; letter-spacing: 3px; color: #fff; font-family: 'Courier New', monospace;
         }
         
-        /* NOME E DATA - IN BASSO */
         .card-bottom-info {
-            position: absolute;
-            bottom: 25px;
-            left: 25px;
-            right: 25px;
+            position: absolute; bottom: 25px; left: 25px; right: 25px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        .card-name-txt { font-size: 13px; text-transform: uppercase; color: #ffffff; font-weight: 500; }
+        .expiry-txt { font-size: 13px; color: #ffffff; font-weight: 500; }
+
+        /* --- RETRO --- */
+        .card-back {
+            background-color: #161d36;
+            transform: rotateY(180deg); /* Ruotato inizialmente */
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            z-index: 2;
+            flex-direction: column;
+            padding: 0;
+            opacity: 0; /* Inizialmente invisibile */
         }
         
-        .card-name-txt { 
-            font-size: 13px; 
-            letter-spacing: 1px; 
-            text-transform: uppercase; 
-            color: #ffffff;
-            font-weight: 500;
+        /* Quando la carta è flippata, il retro appare */
+        .card-flipper.is-flipped .card-back {
+            opacity: 1;
         }
 
-        .expiry-txt {
-            font-size: 13px;
-            color: #ffffff;
-            font-weight: 500;
+        .magnetic-strip {
+            width: 100%;
+            height: 45px;
+            background: #000;
+            margin-top: 25px;
+        }
+
+        .signature-area {
+            width: 80%;
+            height: 35px;
+            background: rgba(255,255,255,0.8);
+            margin: 20px 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            border-radius: 4px;
+        }
+
+        .cvv-txt {
+            color: #000;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 16px;
+        }
+
+        .back-details {
+            margin: 20px 25px;
+            font-size: 8px;
+            line-height: 1.2;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+        }
+
+        .back-logo {
+            position: absolute;
+            bottom: 20px;
+            right: 25px;
+            width: 50px;
+            opacity: 0.3;
         }
 
         /* TASTI AZIONE */
         .actions { display: flex; gap: 40px; margin-top: 40px; }
-        .btn-container { text-align: center; cursor: pointer; color: inherit; width: 100px;}
-        .btn-disabled { opacity: 0.3; cursor: default; }
-
+        .btn-container { text-align: center; cursor: pointer; color: inherit; width: 100px; }
         .circle-icon {
             width: 60px; height: 60px; border-radius: 20px;
             background: #111; border: 1px solid #222;
@@ -147,9 +196,9 @@
             font-size: 20px; margin-bottom: 10px; transition: 0.2s;
             margin: 0 auto 10px;
         }
-        .accent-color { color: var(--accent); border-color: rgba(0, 242, 255, 0.2); }
+        .btn-reverse { color: var(--accent); }
 
-        /* NAV bar */
+        /* NAV */
         .nav-bar {
             margin-top: auto;
             background: #080808;
@@ -158,7 +207,7 @@
             padding: 15px 0 35px;
             border-top: 1px solid #111;
         }
-        .nav-link { color: #444; text-decoration: none; font-size: 22px; }
+        .nav-link { color: #444; font-size: 22px; }
         .active-link { color: var(--accent); }
 
     </style>
@@ -166,38 +215,54 @@
 <body>
 
     <div class="brand-header">
-        <img src="logotps.png" alt="Logo" class="custom-logo">
+        <img src="deltabank.png" alt="Logo" class="custom-logo">
     </div>
 
     <div class="balance-section">
         <p class="label">Current Balance</p>
-        <h1 class="balance">€ 0,00</h1>
+        <h1 class="balance">€ 1.000,00</h1>
     </div>
 
     <main class="main">
-        <div class="card">
-            <img src="logotps.png" class="card-center-logo">
+        <div class="card-container">
+            <div class="card-flipper" id="cardFlipper">
+                
+                <div class="card-face card-front" id="cardFront">
+                    <img src="deltabank.png" class="card-center-logo">
+                    <div class="card-chip"></div>
+                    <i class="fa-brands fa-cc-mastercard mastercard-icon"></i>
+                    <div class="card-number">•••• •••• •••• 1003</div>
+                    <div class="card-bottom-info">
+                        <p class="card-name-txt">LEONARDO SORU</p>
+                        <p class="expiry-txt">06/29</p>
+                    </div>
+                </div>
 
-            <div class="card-chip"></div>
+                <div class="card-face card-back" id="cardBack">
+                    <div class="magnetic-strip"></div>
+                    <div class="signature-area">
+                        <span class="cvv-txt">973</span>
+                    </div>
+                    <div class="back-details">
+                        Questa carta è di proprietà di TPS BANK.<br>
+                        L'uso è soggetto ai termini di contratto.<br>
+                        Customer Service: +39 06 84381143
+                    </div>
+                    <img src="deltabank.png" class="back-logo">
+                </div>
 
-            <i class="fa-brands fa-cc-mastercard mastercard-icon"></i>
-
-            <div class="card-number">•••• •••• •••• 1003</div>
-
-            <div class="card-bottom-info">
-                <p class="card-name-txt">LEONARDO SORU</p>
-                <p class="expiry-txt">06/50</p>
             </div>
         </div>
 
         <div class="actions">
             <div class="btn-container" onclick="location.reload()">
-                <div class="circle-icon accent-color"><i class="fa-solid fa-arrows-rotate"></i></div>
+                <div class="circle-icon" style="color: var(--accent);"><i class="fa-solid fa-arrows-rotate"></i></div>
                 <p class="label" style="font-size: 11px;">Boost</p>
             </div>
-            <div class="btn-container btn-disabled">
-                <div class="circle-icon"><i class="fa-solid fa-paper-plane"></i></div>
-                <p class="label" style="font-size: 11px;">Send</p>
+            
+            <div class="btn-container btn-reverse" id="reverseBtn">
+                <div class="circle-icon"><i class="fa-solid fa-rotate"></i></div>
+                <p class="label" style="font-size: 11px;">Reverse</p>
             </div>
         </div>
     </main>
@@ -207,6 +272,20 @@
         <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i></a>
         <a href="#" class="nav-link"><i class="fa-solid fa-user"></i></a>
     </nav>
+
+    <script>
+        const cardFlipper = document.getElementById('cardFlipper');
+        const reverseBtn = document.getElementById('reverseBtn');
+        const cardFront = document.getElementById('cardFront');
+        const cardBack = document.getElementById('cardBack');
+
+        reverseBtn.addEventListener('click', () => {
+            // Aggiunge la classe per il flip 3D
+            cardFlipper.classList.toggle('is-flipped');
+            
+            // Logica CSS (opacity) gestirà la visibilità pulita tramite le classi
+        });
+    </script>
 
 </body>
 </html>
